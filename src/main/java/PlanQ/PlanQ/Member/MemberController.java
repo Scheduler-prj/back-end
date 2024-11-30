@@ -27,7 +27,6 @@ public class MemberController {
     //로그인 성공
     @GetMapping("/loginSuccess")
     public ResponseEntity<?> loginSuccess() {
-        System.out.println("hi");
         return ResponseEntity.ok().body("ok");
     }
 
