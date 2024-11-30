@@ -13,3 +13,6 @@ logging:
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
 
+
+server:
+  port: 9001
