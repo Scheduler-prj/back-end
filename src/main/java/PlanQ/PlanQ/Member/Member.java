@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "MEMBER")
+@Table(name = "member")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
@@ -18,6 +18,7 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
     private Long id;
 
     @Column
