@@ -53,7 +53,7 @@ spring:
 
   data:
     redis:
-      host: http://43.203.128.192/
+      host: 43.203.128.192:6379
       port: 6379
       password: 134679!#
 
