@@ -33,7 +33,7 @@ public class MemberController {
 
     //test
     @GetMapping("/test")
-    public ResponseEntity<?> test(@RequestHeader(value = "Authorization", required = false) final String accessToken) {
+    public ResponseEntity<?> test(@RequestHeader(value = "Authorization") final String accessToken) {
         Member findmember = memberService.findByAccessToken(accessToken);
         return ResponseEntity.ok().body(findmember.getEmail());
     }
