@@ -2,8 +2,9 @@ package PlanQ.PlanQ.Member;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,13 +33,9 @@ public class MemberController {
 
     //test
     @GetMapping("/test")
-    public ResponseEntity<?> test() {
-        return ResponseEntity.ok().body("ok");
+    public ResponseEntity<?> test(@RequestHeader(value = "Authorization", required = false) final String accessToken) {
+        Member findmember = memberService.findByAccessToken(accessToken);
+        return ResponseEntity.ok().body(findmember.getEmail());
     }
 
-//    // 로그인
-//    @GetMapping("/")
-//    public ResponseEntity<?> login() {
-//        return ResponseEntity.ok().body("ok");
-//    }
 }

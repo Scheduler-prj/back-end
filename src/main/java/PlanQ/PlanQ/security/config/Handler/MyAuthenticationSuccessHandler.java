@@ -60,6 +60,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
             //log.info("jwtToken = {}", token.getRefreshToken());
 
             // accessToken을 쿼리스트링에 담는 url을 만들어준다.
+            //String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/loginSuccess")
             String targetUrl = UriComponentsBuilder.fromUriString("http://planq.choizeus.com:9001/loginSuccess")
                     .build()
                     .encode(StandardCharsets.UTF_8)
