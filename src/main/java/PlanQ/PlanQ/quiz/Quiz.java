@@ -1,5 +1,6 @@
 package PlanQ.PlanQ.quiz;
 
+import PlanQ.PlanQ.global.Color;
 import PlanQ.PlanQ.question.Question;
 import PlanQ.PlanQ.report.Report;
 import jakarta.persistence.*;
@@ -36,10 +37,12 @@ public class Quiz {
     private LocalDateTime time;
 
     @Column(name = "correct_num")
-    private Long correctNum;
+    private int correctNum;
 
     @Column(name = "question_num")
-    private Long questionNum;
+    private int questionNum;
 
     private boolean favorite;
+
+    private Color color;
 }

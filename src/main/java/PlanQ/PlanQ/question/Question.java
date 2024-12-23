@@ -37,6 +37,6 @@ public class Question {
     private Long selectOption;
 
     @Column(nullable = false)
-    private Long num;
+    private int num;
 
 }
