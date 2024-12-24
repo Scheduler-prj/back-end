@@ -31,18 +31,26 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String uri = request.getRequestURI();
-        return uri.startsWith("/swagger-ui") || uri.startsWith("/api-docs") || uri.contains("token/refresh") || uri.contains("/login");
+        return uri.startsWith("/swagger-ui") || uri.startsWith("/api-docs") || uri.contains("token/refresh") || uri.contains("/login") || uri.contains("/loginSuccess");
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // request Header에서 AccessToken을 가져온다.
-        String atc = request.getHeader("Authorization").split(" ")[1].trim();
+        String atc = request.getHeader("Authorization");
         log.info(atc);
 //        if (responseUri.startsWith("/login")) {
 //            filterChain.doFilter(request, response);
 //            return;
 //        }
+
+        if(atc == null){
+            filterChain.doFilter(request,response);
+            return;
+        }
+
+        atc = atc.split(" ")[1];
+
         if (!StringUtils.hasText(atc)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization header is required");
             return;
@@ -64,6 +72,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             SecurityUserDto userDto = SecurityUserDto.builder()
                     .memberNo(findMember.getId())
                     .email(findMember.getEmail())
+                    .picture(findMember.getProfile())
                     .role("ROLE_".concat(findMember.getUserRole()))
                     .nickname(findMember.getNickname())
                     .build();

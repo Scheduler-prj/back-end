@@ -1,6 +1,7 @@
 package PlanQ.PlanQ.report;
 
 
+import PlanQ.PlanQ.global.Color;
 import PlanQ.PlanQ.quiz.Quiz;
 import PlanQ.PlanQ.report.dto.request.RequestReportDto;
 import PlanQ.PlanQ.todo.Todo;
@@ -55,6 +56,8 @@ public class Report {
         this.isQuiz = requestReportDto.isQuiz();
         this.url = url;
     }
+
+    private Color color;
 
 
 }
