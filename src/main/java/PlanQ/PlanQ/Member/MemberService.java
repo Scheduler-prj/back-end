@@ -36,8 +36,9 @@ public class MemberService {
         return memberRepository.findByEmail(email).get();
     }
 
-    public SecurityUserDto getMember() {
+    public Member getMember() {
         // 사용자 정보 받아오기
-        return (SecurityUserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityUserDto securityUserDto = (SecurityUserDto)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return memberRepository.findByEmail(securityUserDto.getEmail()).get();
     }
 }
