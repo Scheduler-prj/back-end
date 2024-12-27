@@ -43,7 +43,7 @@ public class DashBoardController {
     // 4. 복습 날짜 조회
 
     // 5. 제출된 성과 조회
-    @GetMapping("/submittedReport/{date")
+    @GetMapping("/submittedReport/{date}")
     public  ResponseEntity<List<SubmitReportDto>> getWeeklySubmittedReport(@PathVariable String date){
         return ResponseEntity.ok(dashBoardService.getWeeklySubmittedReport(date));
     }

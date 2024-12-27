@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.DelegatingFilterProxyRegistrationBean;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.html.HTML;
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class DashBoardService {
 
@@ -29,9 +31,6 @@ public class DashBoardService {
     private final WeeklyQuizRepository weeklyQuizRepository;
     private final IncorrectQuizRepository incorrectQuizRepository;
     private final SubmitReportRepository submitReportRepository;
-    private final StringHttpMessageConverter stringHttpMessageConverter;
-    private final MultipartConfigElement multipartConfigElement;
-    private final DelegatingFilterProxyRegistrationBean securityFilterChainRegistration;
 
     public List<DailyQuizDto> getDailyQuizzes(String date) {
         return dailyQuizRepository.findDailyQuizDtosByDate(date);
