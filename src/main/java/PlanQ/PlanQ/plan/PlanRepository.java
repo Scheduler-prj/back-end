@@ -9,6 +9,7 @@ import java.util.List;
 public interface PlanRepository extends JpaRepository<Plan, Long> {
     @Query("SELECT p " +
             "FROM Plan p " +
-            "WHERE p.member = :member AND (FUNCTION('MONTH', p.startDate) = :month OR FUNCTION('MONTH', p.endDate) = :month)")
-    List<Plan> findAllByMemberAndMonth(Member member, Long month);
+            "WHERE p.member = :member AND (FUNCTION('MONTH', p.startDate) = :month OR FUNCTION('MONTH', p.endDate) = :month) " +
+            "AND FUNCTION('YEAR', p.startDate) = :year OR FUNCTION('YEAR', p.endDate) = :year")
+    List<Plan> findAllByMemberAndYearMonth(Member member, Long year, Long month);
 }

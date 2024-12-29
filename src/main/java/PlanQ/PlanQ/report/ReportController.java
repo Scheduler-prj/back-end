@@ -16,10 +16,10 @@ public class ReportController {
 
     @Operation(summary = "리포트 업로드", description = "리포트 업로드")
     @PostMapping("/todo/{todoId}")
-    public ResponseEntity<Long> uploadReport(@RequestHeader(value = "Authorization") final String accessToken ,@PathVariable Long todoId,
+    public ResponseEntity<Long> uploadReport(@PathVariable Long todoId,
                                              @RequestPart(value = "file", required = false) MultipartFile file,
                                              @RequestPart(value = "info") @Validated RequestReportDto requestReportDto){
-        Long response = reportService.createReport(accessToken, todoId, file, requestReportDto);
+        Long response = reportService.createReport(todoId, file, requestReportDto);
         if(response == null){
             return ResponseEntity.badRequest().body(0L);
         }

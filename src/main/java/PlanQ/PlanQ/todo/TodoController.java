@@ -19,29 +19,29 @@ public class TodoController {
 
     @Operation(summary = "투두 조회", description = "달 투두 조회")
     @GetMapping("/{month}")
-    public ResponseEntity<List<ResponseTodoDto>> viewTodoAll(@RequestHeader(value = "Authorization") final String accessToken){
-        return ResponseEntity.ok(todoService.findAllbyMember(accessToken));
+    public ResponseEntity<List<ResponseTodoDto>> viewTodoAll(){
+        return ResponseEntity.ok(todoService.findAllbyMember());
     }
 
     @Operation(summary = "투두 생성", description = "투두 생성")
     @PostMapping()
-    public ResponseEntity<Long> createTodo(@RequestHeader(value = "Authorization") final String accessToken, @RequestBody @Validated RequestTodoDto requestTodoDto){
-        Long response = todoService.createTodo(accessToken, requestTodoDto);
+    public ResponseEntity<Long> createTodo(@RequestBody @Validated RequestTodoDto requestTodoDto){
+        Long response = todoService.createTodo(requestTodoDto);
         if(response == null)
             return ResponseEntity.badRequest().body(null);
         return ResponseEntity.ok(response);
     }
     @Operation(summary = "투두 수정", description = "투두 수정")
     @PutMapping("/{todoId}")
-    public ResponseEntity<ResponseTodoDto> editTodo(@RequestHeader(value = "Authorization") final String accessToken ,@PathVariable Long todoId, @RequestBody @Validated RequestTodoDto requestTodoDto){
-        ResponseTodoDto response = todoService.editTodo(accessToken, todoId, requestTodoDto);
+    public ResponseEntity<ResponseTodoDto> editTodo(@PathVariable Long todoId, @RequestBody @Validated RequestTodoDto requestTodoDto){
+        ResponseTodoDto response = todoService.editTodo(todoId, requestTodoDto);
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "투두 삭제", description = "투두 삭제")
     @DeleteMapping("/{todoId}")
-    public ResponseEntity<Boolean> deleteTodo(@RequestHeader(value = "Authorization") final String accessToken,@PathVariable Long todoId){
-        boolean b = todoService.deleteTodo(accessToken, todoId);
+    public ResponseEntity<Boolean> deleteTodo(@PathVariable Long todoId){
+        boolean b = todoService.deleteTodo(todoId);
         if(b)
             return ResponseEntity.ok(true);
         else

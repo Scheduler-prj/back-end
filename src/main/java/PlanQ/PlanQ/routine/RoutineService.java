@@ -19,7 +19,7 @@ public class RoutineService {
     private final MemberService memberService;
 
    /* public List<ResponseRoutineDto> findAllRoutine(){
-        Member member = null;
+        Member member = memberService.getMember();
         return routineRepository.findAllByMember(member).stream()
                 .map(Routine :: toResponseRoutineDto)
                 .toList();
@@ -27,7 +27,7 @@ public class RoutineService {
 
    /* @Transactional
     public Long createRoutine(RequestRoutineDto requestRoutineDto){
-        Member member = new Member(null, null, null, null);
+        Member member = memberService.getMember();
         Routine routine = requestRoutineDto.toEntity(member);
         routineRepository.save(routine);
         return routine.getId();

@@ -82,7 +82,8 @@ public class Plan {
                 this.endDate,
                 this.color.toString(),
                 this.Alarm,
-                this.Comment
+                this.Comment,
+                this.isClear
         );
     }
 }

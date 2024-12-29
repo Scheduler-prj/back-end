@@ -18,4 +18,5 @@ public class ResponsePlanDto {
     private String color;
     private boolean alarm;
     private String comment;
+    private boolean isClear;
 }
