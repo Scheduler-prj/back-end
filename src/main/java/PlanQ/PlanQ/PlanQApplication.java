@@ -17,7 +17,7 @@ public class PlanQApplication {
 				.properties(APPLICATION_LOCATIONS)
 				.run(args);
 	}
-//	public static void main(String[] args) {
-//		SpringApplication.run(PlanQApplication.class,args);
-//	}
+/*	public static void main(String[] args) {
+		SpringApplication.run(PlanQApplication.class,args);
+	}*/
 }

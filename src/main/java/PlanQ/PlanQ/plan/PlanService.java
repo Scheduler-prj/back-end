@@ -5,6 +5,7 @@ import PlanQ.PlanQ.Member.MemberService;
 import PlanQ.PlanQ.plan.dto.request.RequestPlanDto;
 import PlanQ.PlanQ.plan.dto.response.ResponsePlanDto;
 import PlanQ.PlanQ.report.dto.request.RequestReportDto;
+import PlanQ.PlanQ.security.Dto.SecurityUserDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,24 +25,26 @@ public class PlanService {
         return planRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 Plan Entity 찾지 못함: " + id));
     }
-    public List<ResponsePlanDto> viewAllByMemberAndMonth(String accessToken, Long month){
-        Member member = memberService.findByAccessToken(accessToken);
-        return planRepository.findAllByMemberAndMonth(member, month).stream()
+    public List<ResponsePlanDto> viewAllByMemberAndYearMonth(Long yearMonth){
+        Member member = memberService.getMember();
+        Long year = yearMonth/100;
+        Long month = yearMonth%100;
+        return planRepository.findAllByMemberAndYearMonth(member, year, month).stream()
                 .map(Plan :: toResponsePlanDto)
                 .toList();
     }
 
     @Transactional
-    public boolean createPlan(String accessToken, RequestPlanDto requestPlanDto){
-        Member member = memberService.findByAccessToken(accessToken);
+    public boolean createPlan(RequestPlanDto requestPlanDto){
+        Member member = memberService.getMember();
         Plan plan = requestPlanDto.toEntity(member);
         planRepository.save(plan);
         return true;
     }
 
     @Transactional
-    public boolean editPlan(String accessToken, Long planId, RequestPlanDto requestPlanDto){
-        Member member = memberService.findByAccessToken(accessToken);
+    public boolean editPlan(Long planId, RequestPlanDto requestPlanDto){
+        Member member = memberService.getMember();
         Plan plan = findById(planId);
         if(!member.equals(plan.getMember())){
             log.error("수정 불가");
@@ -52,8 +55,8 @@ public class PlanService {
     }
 
     @Transactional
-    public boolean deletePlan(String accessToken, Long planId){
-        Member member = memberService.findByAccessToken(accessToken);
+    public boolean deletePlan(Long planId){
+        Member member = memberService.getMember();
         Plan plan = findById(planId);
         if(!member.equals(plan.getMember())){
             log.error("삭제 불가");
@@ -64,8 +67,8 @@ public class PlanService {
     }
 
     @Transactional
-    public boolean clearPlan(String accessToken, Long planId) {
-        Member member = memberService.findByAccessToken(accessToken);
+    public boolean clearPlan(Long planId) {
+        Member member = memberService.getMember();
         Plan plan = findById(planId);
         if(!member.equals(plan.getMember())){
             log.error("클리어 불가");

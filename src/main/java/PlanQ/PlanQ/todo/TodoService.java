@@ -26,16 +26,16 @@ public class TodoService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 Todo Entity 찾지 못함: " + id));
     }
 
-    public List<ResponseTodoDto> findAllbyMember(String accessToken){
-        Member member = memberService.findByAccessToken(accessToken);
+    public List<ResponseTodoDto> findAllbyMember(){
+        Member member = memberService.getMember();
         return todoRepository.findAllByMember(member).stream()
                 .map(Todo :: toResponseTotoDto)
                 .toList();
     }
 
     @Transactional
-    public Long createTodo(String accessToken,RequestTodoDto requestTodoDto){
-        Member member = memberService.findByAccessToken(accessToken);
+    public Long createTodo(RequestTodoDto requestTodoDto){
+        Member member = memberService.getMember();
         Color color = Color.valueOf(requestTodoDto.getColor());
         Todo todo = requestTodoDto.toEntity(member, color);
         todoRepository.save(todo);
@@ -43,7 +43,7 @@ public class TodoService {
     }
 
     @Transactional
-    public ResponseTodoDto editTodo(String accessToken, Long todoId, RequestTodoDto requestTodoDto){
+    public ResponseTodoDto editTodo(Long todoId, RequestTodoDto requestTodoDto){
         Todo todo = findById(todoId);
         Color color = Color.valueOf(requestTodoDto.getColor());
         todo.edit(requestTodoDto, color);
@@ -52,14 +52,14 @@ public class TodoService {
     }
 
     @Transactional
-    public boolean deleteTodo(String accessToken, Long todoId){
+    public boolean deleteTodo(Long todoId){
         Todo todo = findById(todoId);
         todoRepository.delete(todo);
         return true;
     }
 
     @Transactional
-    public void updateIsClear(String accessToken, Todo todo){
+    public void updateIsClear(Todo todo){
         todo.updateIsClear();
         todoRepository.save(todo);
     }

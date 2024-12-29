@@ -19,13 +19,13 @@ public class ReportService {
     //private final S3Service s3Service;
 
     @Transactional
-    public Long createReport(String accessToken, Long todoId, MultipartFile file, RequestReportDto requestReportDto){
+    public Long createReport(Long todoId, MultipartFile file, RequestReportDto requestReportDto){
         Todo todo = todoService.findById(todoId);
         String s3Url = "dummy";
         //String s3Url = s3Service.upload(file);
         Report report = requestReportDto.toEntity(s3Url, todo);
         reportRepository.save(report);
-        todoService.updateIsClear(accessToken, todo);
+        todoService.updateIsClear(todo);
         return report.getId();
     }
 }
