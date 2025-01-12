@@ -62,3 +62,15 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${S3_ACCESS}
+      secretKey: ${S3_SECRET}
+    s3:
+      bucketName: planq1
+    region:
+      static: us-east-1
+    stack:
+      auto: false
