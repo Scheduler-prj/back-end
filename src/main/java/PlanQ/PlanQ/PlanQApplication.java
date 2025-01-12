@@ -7,7 +7,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class) // OAuth2 기본 로그인 페이지 사용 안함
 public class PlanQApplication {
-
 	public static final String APPLICATION_LOCATIONS = "spring.config.location="
 			+ "classpath:application.yml,"
 			+ "classpath:application-keys.yml";

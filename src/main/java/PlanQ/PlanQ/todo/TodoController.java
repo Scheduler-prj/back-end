@@ -18,9 +18,9 @@ public class TodoController {
     private final TodoService todoService;
 
     @Operation(summary = "투두 조회", description = "달 투두 조회")
-    @GetMapping("/{month}")
-    public ResponseEntity<List<ResponseTodoDto>> viewTodoAll(){
-        return ResponseEntity.ok(todoService.findAllbyMember());
+    @GetMapping("/{year}/{month}")
+    public ResponseEntity<List<ResponseTodoDto>> viewTodoAll(@PathVariable Long year, @PathVariable Long month){
+        return ResponseEntity.ok(todoService.findAllbyMemberAndYearMonth(year, month));
     }
 
     @Operation(summary = "투두 생성", description = "투두 생성")

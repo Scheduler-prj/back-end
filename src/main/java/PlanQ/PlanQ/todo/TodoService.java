@@ -26,9 +26,9 @@ public class TodoService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 Todo Entity 찾지 못함: " + id));
     }
 
-    public List<ResponseTodoDto> findAllbyMember(){
+    public List<ResponseTodoDto> findAllbyMemberAndYearMonth(Long year, Long month){
         Member member = memberService.getMember();
-        return todoRepository.findAllByMember(member).stream()
+        return todoRepository.findAllByMemberAndYearMonth(member, year,month).stream()
                 .map(Todo :: toResponseTotoDto)
                 .toList();
     }

@@ -17,9 +17,10 @@ public class PlanController {
 
     private final PlanService planService;
     @Operation(summary = "일정 보기", description = "일정 보기")
-    @GetMapping("/{yearMonth}")
-    public ResponseEntity<List<ResponsePlanDto>> viewMonthPlan(@PathVariable Long yearMonth){
-        List<ResponsePlanDto> responsePlanDtoList = planService.viewAllByMemberAndYearMonth(yearMonth);
+    @GetMapping("/{year}/{month}")
+    public ResponseEntity<List<ResponsePlanDto>> viewMonthPlan(@PathVariable("year") Long year,
+                                                               @PathVariable("month") Long month){
+        List<ResponsePlanDto> responsePlanDtoList = planService.viewAllByMemberAndYearMonth(year, month);
         if(responsePlanDtoList.isEmpty()){
             return ResponseEntity.badRequest().body(responsePlanDtoList);
         }

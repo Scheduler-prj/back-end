@@ -1,12 +1,15 @@
 package PlanQ.PlanQ.report;
 
 import PlanQ.PlanQ.report.dto.request.RequestReportDto;
+import PlanQ.PlanQ.report.dto.response.ResponsePdfDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -25,4 +28,34 @@ public class ReportController {
         }
         return ResponseEntity.ok(response);
     }
+
+    @Operation(summary = "리포트 달별로 확인 Month의 값을 0으로 줄시 모든 리포트 반환", description = "리포트 달별 확인")
+    @GetMapping("/pdf/{year}/{month}")
+    public ResponseEntity<List<ResponsePdfDto>> viewAllPdfYearMonth(@PathVariable Long year, @PathVariable Long month){
+        List<ResponsePdfDto> responsePdfDtoList = reportService.getPdfOfYearMonth( year, month);
+        return ResponseEntity.ok(responsePdfDtoList);
+    }
+
+    @Operation(summary = "리포트 삭제", description = "리포트 삭제")
+    @DeleteMapping("/pdf/{id}")
+    public ResponseEntity<Boolean> deletePdf(@PathVariable Long id){
+        boolean response = reportService.deletePdf(id);
+        if(response){
+            return ResponseEntity.ok(true);
+        }else{
+            return ResponseEntity.badRequest().body(false);
+        }
+    }
+
+    @Operation(summary = "리포트 Url반환", description = "리포트 Url반환")
+    @GetMapping("/pdf/download/{id}")
+    public ResponseEntity<String> responseUrl(@PathVariable Long id){
+        String response = reportService.getUrl(id);
+        if(response != null){
+            return ResponseEntity.ok(response);
+        }else{
+            return ResponseEntity.badRequest().body("url이 존재하지 않음");
+        }
+    }
+
 }

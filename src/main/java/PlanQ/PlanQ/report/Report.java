@@ -4,6 +4,7 @@ package PlanQ.PlanQ.report;
 import PlanQ.PlanQ.global.Color;
 import PlanQ.PlanQ.quiz.Quiz;
 import PlanQ.PlanQ.report.dto.request.RequestReportDto;
+import PlanQ.PlanQ.report.dto.response.ResponsePdfDto;
 import PlanQ.PlanQ.todo.Todo;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -45,7 +46,7 @@ public class Report {
     @Column(nullable = false, name = "update_date")
     private LocalDateTime updateDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2048)
     private String url;
 
     @Builder
@@ -54,10 +55,20 @@ public class Report {
         this.fileName = requestReportDto.getFileName();
         this.comment = requestReportDto.getComment();
         this.isQuiz = requestReportDto.isQuiz();
+        this.updateDate = LocalDateTime.now();
         this.url = url;
     }
 
     private Color color;
 
+
+    public ResponsePdfDto toResponsePdfDto(){
+        return new ResponsePdfDto(
+                this.id,
+                this.fileName,
+                this.updateDate,
+                this.isQuiz
+        );
+    }
 
 }
