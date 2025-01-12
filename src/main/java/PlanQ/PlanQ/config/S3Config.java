@@ -11,12 +11,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class S3Config {
-    // TODO: 아직 s3 키 받지 않음
-    //@Value("${cloud.aws.credentials.accessKey}")
+    @Value("${cloud.aws.credentials.accessKey}")
     private String accessKey = "dummyData";
-    //@Value("${cloud.aws.credentials.secretKey}")
+    @Value("${cloud.aws.credentials.secretKey}")
     private String secretKey = "dummyData";
-    //@Value("${cloud.aws.region.static}")
+    @Value("${cloud.aws.region.static}")
     private String region = "dummyData";
 
     @Bean

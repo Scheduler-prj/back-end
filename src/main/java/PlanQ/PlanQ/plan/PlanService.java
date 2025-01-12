@@ -25,10 +25,8 @@ public class PlanService {
         return planRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 Plan Entity 찾지 못함: " + id));
     }
-    public List<ResponsePlanDto> viewAllByMemberAndYearMonth(Long yearMonth){
+    public List<ResponsePlanDto> viewAllByMemberAndYearMonth(Long year, Long month){
         Member member = memberService.getMember();
-        Long year = yearMonth/100;
-        Long month = yearMonth%100;
         return planRepository.findAllByMemberAndYearMonth(member, year, month).stream()
                 .map(Plan :: toResponsePlanDto)
                 .toList();
