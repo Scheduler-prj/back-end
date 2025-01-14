@@ -1,4 +1,3 @@
-/*
 package PlanQ.PlanQ.routine;
 
 import PlanQ.PlanQ.routine.dto.request.RequestRoutineDto;
@@ -29,16 +28,35 @@ public class RoutineController {
         return ResponseEntity.ok(routineService.createRoutine(requestRoutineDto));
     }
 
- */
-/* @PutMapping()
-    public ResponseEntity<> editRoutine(){
-
+    @Operation(summary = "루틴 수정", description = "루틴 수정")
+    @PutMapping("/{routine_id}")
+    public ResponseEntity<Long> editRoutine(@PathVariable Long routine_id, @RequestBody @Validated RequestRoutineDto requestRoutineDto){
+        Long response = routineService.editRoutine(routine_id, requestRoutineDto);
+        if(response != 0L){
+            return ResponseEntity.ok(response);
+        }else{
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
-    @PutMapping()
-    public ResponseEntity<> claerRoutine(){
+    @Operation(summary = "루틴 삭제", description = "루틴 삭제")
+    @DeleteMapping("/{routine_id}")
+    public ResponseEntity<Boolean> deleteRoutine(@PathVariable Long routine_id){
+        if(routineService.deleteRoutine(routine_id)){
+            return ResponseEntity.ok(true);
+        }else{
+            return ResponseEntity.badRequest().body(false);
+        }
+    }
 
-    }*//*
-
+    @Operation(summary = "루틴 완료", description = "루틴 완료")
+    @PutMapping("/clear/{routine_id}")
+    public ResponseEntity<Long> clearRoutine(@PathVariable Long routine_id){
+        Long response = routineService.clearRoutine(routine_id);
+        if(response != 0L){
+            return ResponseEntity.ok(response);
+        }else{
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
 }
-*/

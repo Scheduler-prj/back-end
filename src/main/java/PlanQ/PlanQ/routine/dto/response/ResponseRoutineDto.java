@@ -1,8 +1,11 @@
 package PlanQ.PlanQ.routine.dto.response;
 
+import PlanQ.PlanQ.routine.Dotw;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,7 +16,7 @@ public class ResponseRoutineDto {
 
     private String title;
 
-    private String dotws;
+    private List<String> dotws;
 
     private boolean alarm;
 
