@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "routine")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,8 +25,13 @@ public class Routine {
     @Column
     private String title;
 
-    @Column
-    private String dotws;
+
+
+    @ElementCollection(targetClass = Dotw.class)
+    @CollectionTable(name = "dotws", joinColumns = @JoinColumn(name = "routine_id")
+    )
+    @Enumerated(value = EnumType.STRING)
+    private List<Dotw> dotws;
 
     @Column
     private boolean alarm;
@@ -36,28 +43,43 @@ public class Routine {
     @JoinColumn(name = "memberId")
     private Member member;
 
+    private boolean isClear;
+
     @Builder
-    public Routine(RequestRoutineDto requestRoutineDto, Member member){
-        ObjectMapper objectMapper = new ObjectMapper();
+    public Routine(RequestRoutineDto requestRoutineDto, Member member, List<Dotw> dotws){
         this.title = requestRoutineDto.getTitle();
-        try {
-            this.dotws =  objectMapper.writeValueAsString(requestRoutineDto.getDotw());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        this.dotws = dotws;
         this.alarm = requestRoutineDto.isAlarm();
         this.comment = requestRoutineDto.getComment();
         this.member = member;
+        this.isClear = false;
     }
 
-    /*public ResponseRoutineDto toResponseRoutineDto(){
+    public ResponseRoutineDto toResponseRoutineDto(){
         return new ResponseRoutineDto(
                 this.id,
                 this.title,
-                this.dotws,
+                this.dotws.stream().map(Dotw :: changeString).toList(),
                 this.alarm,
-                this.comment
+                this.comment,
+                this.isClear
         );
-    }*/
+    }
+
+    public void edit(RequestRoutineDto requestRoutineDto){
+        this.title = requestRoutineDto.getTitle();
+        this.dotws = requestRoutineDto.changeEnum(requestRoutineDto.getDotws());
+        this.alarm = requestRoutineDto.isAlarm();
+        this.comment = requestRoutineDto.getComment();
+        this.isClear = false;
+    }
+
+    public void changeClear(){
+        this.isClear = !this.isClear;
+    }
+
+    public void reset(){
+        this.isClear = false;
+    }
 
 }
