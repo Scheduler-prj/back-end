@@ -1,6 +1,8 @@
 package PlanQ.PlanQ.plan.dto.request;
 
 import PlanQ.PlanQ.Member.Member;
+import PlanQ.PlanQ.embeddad.Calender;
+import PlanQ.PlanQ.global.Color;
 import PlanQ.PlanQ.plan.Plan;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,17 +14,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestPlanDto {
-    private String title;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private String color;
-    private boolean alarm;
-    private String comment;
+    private Calender calender;
 
     public Plan toEntity(Member member){
         return Plan.builder()
-                .requestPlanDto(this)
                 .member(member)
+                .requestPlanDto(this)
                 .build();
     }
 }

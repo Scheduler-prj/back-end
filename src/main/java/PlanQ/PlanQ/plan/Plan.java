@@ -1,6 +1,7 @@
 package PlanQ.PlanQ.plan;
 
 import PlanQ.PlanQ.Member.Member;
+import PlanQ.PlanQ.embeddad.Calender;
 import PlanQ.PlanQ.global.Color;
 import PlanQ.PlanQ.plan.dto.request.RequestPlanDto;
 import PlanQ.PlanQ.plan.dto.response.ResponsePlanDto;
@@ -22,8 +23,8 @@ public class Plan {
     @Column(name = "plan_id")
     private Long id;
 
-    @Column
-    private String title;
+    @Embedded
+    private Calender calender;
 
     @Column
     private LocalDateTime startDate;
@@ -31,59 +32,38 @@ public class Plan {
     @Column
     private LocalDateTime endDate;
 
-    @Column
-    @Enumerated(EnumType.STRING)
-    private Color color;
-
-    @Column
-    private boolean Alarm;
-
-    @Column
-    private String Comment;
-
-    @Column(name = "is_clear")
-    private boolean isClear;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     private Member member;
 
     @Builder
     public Plan(Member member, RequestPlanDto requestPlanDto){
-        this.title = requestPlanDto.getTitle();
+        this.calender = requestPlanDto.getCalender();
         this.startDate = requestPlanDto.getStartDate();
         this.endDate = requestPlanDto.getEndDate();
-        this.color = Color.valueOf(requestPlanDto.getColor());
-        this.Alarm = requestPlanDto.isAlarm();
-        this.Comment = requestPlanDto.getComment();
-        this.isClear = false;
         this.member = member;
     }
 
     public void update(RequestPlanDto requestPlanDto){
-        this.title = requestPlanDto.getTitle();
+        this.calender = requestPlanDto.getCalender();
         this.startDate = requestPlanDto.getStartDate();
         this.endDate = requestPlanDto.getEndDate();
-        this.color = Color.valueOf(requestPlanDto.getColor());
-        this.Alarm = requestPlanDto.isAlarm();
-        this.Comment = requestPlanDto.getComment();
-        this.isClear = false;
     }
 
     public void clear(){
-        this.isClear = true;
+        this.calender.checkClear();
     }
 
     public ResponsePlanDto toResponsePlanDto(){
         return new ResponsePlanDto(
                 this.id,
-                this.title,
+                this.calender.getTitle(),
                 this.startDate,
                 this.endDate,
-                this.color.toString(),
-                this.Alarm,
-                this.Comment,
-                this.isClear
+                this.calender.getColor().toString(),
+                this.calender.isAlarm(),
+                this.calender.getComment(),
+                this.calender.isClear()
         );
     }
 }
