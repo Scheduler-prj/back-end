@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,13 +29,13 @@ public class PlanController {
     }
     @Operation(summary = "일정 생성", description = "일정 생성")
     @PostMapping()
-    public ResponseEntity<Boolean> createPlan(@RequestBody RequestPlanDto requestPlanDto){
+    public ResponseEntity<Boolean> createPlan(@RequestBody @Validated RequestPlanDto requestPlanDto){
         return ResponseEntity.ok(planService.createPlan(requestPlanDto));
     }
     @Operation(summary = "일정 수정", description = "일정 수정")
     @PutMapping("/{planId}")
     public ResponseEntity<Boolean> editPlan(@PathVariable Long planId,
-                                            @RequestBody RequestPlanDto requestPlanDto){
+                                            @RequestBody @Validated RequestPlanDto requestPlanDto){
         return ResponseEntity.ok(planService.editPlan(planId, requestPlanDto));
     }
     @Operation(summary = "일정 삭제", description = "일정 삭제")

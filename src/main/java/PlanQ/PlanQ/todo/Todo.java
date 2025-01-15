@@ -1,6 +1,7 @@
 package PlanQ.PlanQ.todo;
 
 import PlanQ.PlanQ.Member.Member;
+import PlanQ.PlanQ.embeddad.Calender;
 import PlanQ.PlanQ.global.Color;
 import PlanQ.PlanQ.todo.dto.request.RequestTodoDto;
 import PlanQ.PlanQ.todo.dto.response.ResponseTodoDto;
@@ -27,52 +28,37 @@ public class Todo {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private String title;
-
     private LocalDateTime todoAt;
 
-    @Enumerated(EnumType.STRING)
-    private Color color;
-
-    private boolean alarm;
-
-    private String comment;
-
-    @Column(name = "is_clear")
-    private boolean isClear;
+    @Embedded
+    private Calender calender;
 
     @Builder
-    public Todo(RequestTodoDto requestTodoDto, Member member, Color color){
+    public Todo(RequestTodoDto requestTodoDto, Member member){
         this.member = member;
-        this.title = requestTodoDto.getTitle();
         this.todoAt = requestTodoDto.getTodoAt();
-        this.color = color;
-        this.alarm = requestTodoDto.isPlanAlarm();
-        this.comment = requestTodoDto.getPlanComment();
-        this.isClear = false;
+        this.calender = requestTodoDto.getCalender();
     }
 
-    public Todo edit(RequestTodoDto requestTodoDto, Color color){
-        this.title = requestTodoDto.getTitle();
+    public Todo edit(RequestTodoDto requestTodoDto){
         this.todoAt = requestTodoDto.getTodoAt();
-        this.color = color;
-        this.alarm = requestTodoDto.isPlanAlarm();
-        this.comment = requestTodoDto.getPlanComment();
+        this.calender = requestTodoDto.getCalender();
         return this;
     }
 
     public ResponseTodoDto toResponseTotoDto(){
         return new ResponseTodoDto(
                 this.id,
-                this.title,
+                this.getCalender().getTitle(),
+                this.getCalender().getComment(),
                 this.todoAt,
-                this.color.toString(),
-                this.alarm,
-                this.comment
+                this.getCalender().getColor().toString(),
+                this.getCalender().isAlarm(),
+                this.getCalender().isClear()
         );
     }
 
     public void updateIsClear(){
-        this.isClear = true;
+        this.calender.changeClear();
     }
 }

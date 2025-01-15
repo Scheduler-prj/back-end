@@ -36,8 +36,7 @@ public class TodoService {
     @Transactional
     public Long createTodo(RequestTodoDto requestTodoDto){
         Member member = memberService.getMember();
-        Color color = Color.valueOf(requestTodoDto.getColor());
-        Todo todo = requestTodoDto.toEntity(member, color);
+        Todo todo = requestTodoDto.toEntity(member);
         todoRepository.save(todo);
         return todo.getId();
     }
@@ -45,8 +44,7 @@ public class TodoService {
     @Transactional
     public ResponseTodoDto editTodo(Long todoId, RequestTodoDto requestTodoDto){
         Todo todo = findById(todoId);
-        Color color = Color.valueOf(requestTodoDto.getColor());
-        todo.edit(requestTodoDto, color);
+        todo.edit(requestTodoDto);
         todoRepository.save(todo);
         return todo.toResponseTotoDto();
     }
@@ -61,6 +59,5 @@ public class TodoService {
     @Transactional
     public void updateIsClear(Todo todo){
         todo.updateIsClear();
-        todoRepository.save(todo);
     }
 }
