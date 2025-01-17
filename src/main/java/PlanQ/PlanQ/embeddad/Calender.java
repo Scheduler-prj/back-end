@@ -1,10 +1,7 @@
 package PlanQ.PlanQ.embeddad;
 
-import PlanQ.PlanQ.global.Color;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,9 +20,6 @@ public class Calender {
     @NotBlank
     private String comment;
 
-    @Enumerated(EnumType.STRING)
-    private Color color;
-
     @NotNull
     private boolean alarm;
 
@@ -38,5 +32,9 @@ public class Calender {
 
     public void changeClear(){
         this.isClear = true;
+    }
+
+    public void reset(){
+        this.isClear = false;
     }
 }

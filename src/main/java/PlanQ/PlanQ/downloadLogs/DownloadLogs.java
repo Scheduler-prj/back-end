@@ -1,8 +1,10 @@
 package PlanQ.PlanQ.downloadLogs;
 
+import PlanQ.PlanQ.Member.Member;
 import PlanQ.PlanQ.report.Report;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,12 +25,22 @@ public class DownloadLogs {
     @JoinColumn(name = "pdf_id")
     private Report report;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     private LocalDateTime dateTime;
 
-    private String status;
 
+    @Builder
+    public DownloadLogs(Member member, Report report){
+        this.report = report;
+        this.member = member;
+        this.dateTime = LocalDateTime.now();
+    }
 
+    public void updateDate(){
+        this.dateTime = LocalDateTime.now();
+    }
 
 }

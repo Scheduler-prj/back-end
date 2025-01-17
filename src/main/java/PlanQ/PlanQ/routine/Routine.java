@@ -1,6 +1,7 @@
 package PlanQ.PlanQ.routine;
 
 import PlanQ.PlanQ.Member.Member;
+import PlanQ.PlanQ.embeddad.Calender;
 import PlanQ.PlanQ.routine.dto.request.RequestRoutineDto;
 import PlanQ.PlanQ.routine.dto.response.ResponseRoutineDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,10 +23,8 @@ public class Routine {
     @Column(name = "routine_id")
     private Long id;
 
-    @Column
-    private String title;
-
-
+    @Embedded
+    private Calender calender;
 
     @ElementCollection(targetClass = Dotw.class)
     @CollectionTable(name = "dotws", joinColumns = @JoinColumn(name = "routine_id")
@@ -33,53 +32,40 @@ public class Routine {
     @Enumerated(value = EnumType.STRING)
     private List<Dotw> dotws;
 
-    @Column
-    private boolean alarm;
-
-    @Column
-    private String comment;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     private Member member;
 
-    private boolean isClear;
 
     @Builder
     public Routine(RequestRoutineDto requestRoutineDto, Member member, List<Dotw> dotws){
-        this.title = requestRoutineDto.getTitle();
         this.dotws = dotws;
-        this.alarm = requestRoutineDto.isAlarm();
-        this.comment = requestRoutineDto.getComment();
+        this.calender = requestRoutineDto.getCalender();
         this.member = member;
-        this.isClear = false;
     }
 
     public ResponseRoutineDto toResponseRoutineDto(){
         return new ResponseRoutineDto(
                 this.id,
-                this.title,
+                this.calender.getTitle(),
                 this.dotws.stream().map(Dotw :: changeString).toList(),
-                this.alarm,
-                this.comment,
-                this.isClear
+                this.calender.isAlarm(),
+                this.calender.getComment(),
+                this.calender.isClear()
         );
     }
 
     public void edit(RequestRoutineDto requestRoutineDto){
-        this.title = requestRoutineDto.getTitle();
         this.dotws = requestRoutineDto.changeEnum(requestRoutineDto.getDotws());
-        this.alarm = requestRoutineDto.isAlarm();
-        this.comment = requestRoutineDto.getComment();
-        this.isClear = false;
+        this.calender = requestRoutineDto.getCalender();
     }
 
     public void changeClear(){
-        this.isClear = !this.isClear;
+        this.calender.changeClear();
     }
 
     public void reset(){
-        this.isClear = false;
+        this.calender.reset();
     }
 
 }

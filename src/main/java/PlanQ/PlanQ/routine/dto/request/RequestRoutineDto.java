@@ -1,8 +1,10 @@
 package PlanQ.PlanQ.routine.dto.request;
 
 import PlanQ.PlanQ.Member.Member;
+import PlanQ.PlanQ.embeddad.Calender;
 import PlanQ.PlanQ.routine.Dotw;
 import PlanQ.PlanQ.routine.Routine;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -11,20 +13,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestRoutineDto {
-    @NotBlank
-    private String title;
 
+    @Valid
     @NotNull
-    private boolean alarm;
-
-    @NotBlank
-    private String comment;
+    private Calender calender;
 
     @NotEmpty
     private List<@NotBlank String> dotws;
@@ -37,11 +37,11 @@ public class RequestRoutineDto {
                 .build();
     }
     public List<Dotw> changeEnum(List<String> dotws){
-        List<Dotw> dotwList = new ArrayList<>();
+        Set<Dotw> dotwSet = new HashSet<>();
         for(String s_dotw : dotws){
             Dotw dotw = Dotw.valueOf(s_dotw);
-            dotwList.add(dotw);
+            dotwSet.add(dotw);
         }
-        return dotwList;
+        return new ArrayList<>(dotwSet);
     }
 }

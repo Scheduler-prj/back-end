@@ -4,6 +4,8 @@ import PlanQ.PlanQ.Member.Member;
 import PlanQ.PlanQ.embeddad.Calender;
 import PlanQ.PlanQ.global.Color;
 import PlanQ.PlanQ.todo.Todo;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,9 @@ public class RequestTodoDto {
 
     @NotNull
     private Calender calender;
+
+    @Enumerated(EnumType.STRING)
+    private Color color;
 
     public Todo toEntity(Member member){
         return Todo.builder()

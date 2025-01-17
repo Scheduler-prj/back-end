@@ -26,6 +26,9 @@ public class Plan {
     @Embedded
     private Calender calender;
 
+    @Enumerated(EnumType.STRING)
+    private Color color;
+
     @Column
     private LocalDateTime startDate;
 
@@ -39,6 +42,7 @@ public class Plan {
     @Builder
     public Plan(Member member, RequestPlanDto requestPlanDto){
         this.calender = requestPlanDto.getCalender();
+        this.color = requestPlanDto.getColor();
         this.startDate = requestPlanDto.getStartDate();
         this.endDate = requestPlanDto.getEndDate();
         this.member = member;
@@ -60,7 +64,7 @@ public class Plan {
                 this.calender.getTitle(),
                 this.startDate,
                 this.endDate,
-                this.calender.getColor().toString(),
+                this.color.toString(),
                 this.calender.isAlarm(),
                 this.calender.getComment(),
                 this.calender.isClear()
