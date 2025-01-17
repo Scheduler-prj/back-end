@@ -1,6 +1,7 @@
 package PlanQ.PlanQ.report;
 
 
+import PlanQ.PlanQ.downloadLogs.DownloadLogs;
 import PlanQ.PlanQ.global.Color;
 import PlanQ.PlanQ.quiz.Quiz;
 import PlanQ.PlanQ.report.dto.request.RequestReportDto;
@@ -16,6 +17,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -32,6 +34,9 @@ public class Report {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "todo_id",nullable = false)
     private Todo todo;
+
+    @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DownloadLogs> DownloadLogsList = new ArrayList<>();
 
     @Column(nullable = false, name = "file_name")
     private String fileName;

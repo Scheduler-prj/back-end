@@ -12,8 +12,10 @@ import java.time.LocalDateTime;
 public class ResponseTodoDto {
     private Long todoId;
     private String title;
+    private String planComment;
     private LocalDateTime todoAt;
     private String color;
     private boolean planAlarm;
-    private String planComment;
+    private boolean isClear;
+
 }

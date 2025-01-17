@@ -1,8 +1,11 @@
 package PlanQ.PlanQ.todo.dto.request;
 
 import PlanQ.PlanQ.Member.Member;
+import PlanQ.PlanQ.embeddad.Calender;
 import PlanQ.PlanQ.global.Color;
 import PlanQ.PlanQ.todo.Todo;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -16,24 +19,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RequestTodoDto {
 
-    @NotBlank
-    private String title;
-
     @NotNull
     private LocalDateTime todoAt;
 
-    private String color;
-
     @NotNull
-    private boolean planAlarm;
+    private Calender calender;
 
-    private String planComment;
+    @Enumerated(EnumType.STRING)
+    private Color color;
 
-    public Todo toEntity(Member member, Color color){
+    public Todo toEntity(Member member){
         return Todo.builder()
                 .requestTodoDto(this)
                 .member(member)
-                .color(color)
                 .build();
     }
 

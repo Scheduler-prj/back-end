@@ -3,6 +3,7 @@ package PlanQ.PlanQ.report;
 //import PlanQ.PlanQ.global.S3Service;
 import PlanQ.PlanQ.Member.Member;
 import PlanQ.PlanQ.Member.MemberService;
+import PlanQ.PlanQ.downloadLogs.DownloadService;
 import PlanQ.PlanQ.global.S3Service;
 import PlanQ.PlanQ.report.dto.request.RequestReportDto;
 import PlanQ.PlanQ.report.dto.response.ResponsePdfDto;
@@ -25,6 +26,7 @@ public class ReportService {
     private final TodoService todoService;
     private final S3Service s3Service;
     private final MemberService memberService;
+    private final DownloadService downloadService;
 
     public Report findById(Long id){
         return reportRepository.findById(id)
@@ -68,6 +70,8 @@ public class ReportService {
 
     public String getUrl(Long id){
         Report report = findById(id);
+        Member member = memberService.getMember();
+        downloadService.downLoad(member, report);
         return report.getUrl();
     }
 }
