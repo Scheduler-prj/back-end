@@ -12,8 +12,8 @@ import java.util.List;
 @Repository
 public interface WeeklyQuizRepository extends JpaRepository<Quiz,Long> {
 
-        @Query("select new PlanQ.PlanQ.DashBoard.DTO.WeeklyQuizDto(q.questionNum,q.correctNum,q.questionNum-q.correctNum) " +
+        @Query("select new PlanQ.PlanQ.DashBoard.DTO.WeeklyQuizDto(q.questionCnt,q.correctCnt,q.questionCnt-q.correctCnt) " +
             "from Quiz q " +
-            "where q.date between :startDate and :endDate")
+            "where q.reviewDate between :startDate and :endDate")
         List<WeeklyQuizDto> findQuestionNumAndCorrectNumByDate(String startDate, String endDate);
 }

@@ -11,9 +11,9 @@ import java.util.List;
 @Repository
 public interface IncorrectQuizRepository extends JpaRepository<Quiz,Long> {
 
-    @Query("select new PlanQ.PlanQ.DashBoard.DTO.IncorrectQuestionDto(qu.color, qu.title, q.num, q.title) " +
+    @Query("select new PlanQ.PlanQ.DashBoard.DTO.IncorrectQuestionDto(qu.color, qu.title, q.question_num, q.content) " +
             "from Question q " +
             "join Quiz qu on qu.id = q.quiz.id " +
-            "where qu.date between :startDate and :endDate")
+            "where qu.reviewDate between :startDate and :endDate")
     List<IncorrectQuestionDto> findIncorrectQuestionDtosByDate(String startDate, String endDate);
 }
