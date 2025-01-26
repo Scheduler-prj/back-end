@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.mapping.ToOne;
 
 @Data
 @Entity
@@ -30,22 +32,26 @@ public class Quiz {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "quiz_id")
+    @Column(name = "quiz_id", nullable = false)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private LocalDateTime reviewDate; // date -> reviewDate
 
     private LocalTime solveTime; // time -> solveTime
 
     private String category; // 디자인 회의 필요(직접 지정 or to do 제목)
 
-    private int correctCnt; // correctNum -> correctCnt
+    private Integer correctCnt; // correctNum -> correctCnt
 
-    private int questionCnt; // questionNum -> questionCnt
+    @Column(nullable = false)
+    private Integer questionCnt; // questionNum -> questionCnt
 
     @Builder.Default
+    @Column(nullable = false)
     private boolean isSolved = false;
 
     @Builder.Default
@@ -55,7 +61,7 @@ public class Quiz {
     @Enumerated(EnumType.STRING)
     private Color color;
 
-    @OneToOne
-    @JoinColumn(name = "report_id")
+    @ManyToOne
+    @JoinColumn(name = "report_id", nullable = false)
     private Report report;
 }

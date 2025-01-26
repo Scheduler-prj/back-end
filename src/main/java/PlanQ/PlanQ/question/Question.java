@@ -31,25 +31,30 @@ public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "question_id")
+    @Column(name = "question_id", nullable = false)
     private Long id;
 
     @Column(nullable = false)
-    private int question_num; // num -> question_num
+    private Integer questionNum; // num -> question_num
 
+    @Column(nullable = false)
     private String content; // title -> content
 
+    @Column(nullable = false)
     private String correct;
 
-    private int selectOption; // (long -> int)
+    private Integer selectOption; // (long -> Integer(null 허용을 위해)
 
-    private boolean isCorrect;
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean isCorrect = false;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
+    @Column(nullable = false)
     private QuestionType questionType = QuestionType.MCQ;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "quiz_id")
+    @JoinColumn(name = "quiz_id", nullable = false)
     private Quiz quiz;
 }
