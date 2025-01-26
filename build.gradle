@@ -21,6 +21,11 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+}
+
+ext {
+	set('springAiVersion', "1.0.0-M4")
 }
 
 dependencies {
@@ -29,6 +34,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	implementation "org.springframework.ai:spring-ai-openai-spring-boot-starter:${springAiVersion}"
+	implementation "org.springframework.ai:spring-ai-core:${springAiVersion}"
+	implementation 'org.apache.pdfbox:pdfbox:2.0.29'
+	implementation 'org.apache.pdfbox:pdfbox-tools:2.0.29'
+
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
@@ -43,7 +55,11 @@ dependencies {
 
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 }
-
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+	}
+}
 tasks.named('test') {
 	useJUnitPlatform()
 }
