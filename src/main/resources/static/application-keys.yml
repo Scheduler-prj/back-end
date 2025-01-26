@@ -63,6 +63,23 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
 
+  ai:
+    vertex:
+      ai:
+        gemini:
+          project-id: ${VERTEX_PROJECT_ID}
+          location: asia-northeast3
+          chat:
+            options:
+              model: "vertex-pro-vision"
+              temperature: 0.5
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o
+          temperature: 0.5
+
 cloud:
   aws:
     credentials:
