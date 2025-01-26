@@ -1,8 +1,10 @@
 package PlanQ.PlanQ.report;
 
+import PlanQ.PlanQ.quiz.QuizService;
 import PlanQ.PlanQ.report.dto.request.RequestReportDto;
 import PlanQ.PlanQ.report.dto.response.ResponsePdfDto;
 import io.swagger.v3.oas.annotations.Operation;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,17 +18,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReportController {
     private final ReportService reportService;
+    private final QuizService quizService;
 
     @Operation(summary = "리포트 업로드", description = "리포트 업로드")
     @PostMapping("/todo/{todoId}")
     public ResponseEntity<Long> uploadReport(@PathVariable Long todoId,
                                              @RequestPart(value = "file", required = false) MultipartFile file,
-                                             @RequestPart(value = "info") @Validated RequestReportDto requestReportDto){
-        Long response = reportService.createReport(todoId, file, requestReportDto);
-        if(response == null){
+                                             @RequestPart(value = "info") @Validated RequestReportDto requestReportDto) throws IOException {
+        Report report = reportService.createReport(todoId, file, requestReportDto);
+        quizService.generateQuizFromPdf(file, report);
+        if(report == null){
             return ResponseEntity.badRequest().body(0L);
         }
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(report.getId());
     }
 
     @Operation(summary = "리포트 달별로 확인 Month의 값을 0으로 줄시 모든 리포트 반환", description = "리포트 달별 확인")
