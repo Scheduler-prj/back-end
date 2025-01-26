@@ -91,3 +91,85 @@ cloud:
       static: us-east-1
     stack:
       auto: false
+
+quiz:
+  generation:
+    prompt: >
+      사진 내용을 기반으로 총 4일치 퀴즈를 생성하세요. 각 퀴즈는 PDF 내용의 길이에 따라 1, 3, 5, 10개의 질문을 포함하며, 모든 질문은 사지선다형(보기 4개)으로 작성됩니다. 정답 번호는 `correct` 필드에 명시해주세요.
+      반드시 JSON 형태로 답해주세요.
+      
+      **요구사항**:
+      1. PDF를 분석하여 4일치 퀴즈를 생성합니다. 각 퀴즈는 고유한 `day` 값과 `title`을 가집니다.
+      2. 각 퀴즈에는 `questionCnt` 필드로 질문 개수를 표시하며, 질문 개수는 PDF 내용 길이에 따라 다릅니다:
+         - 짧은 내용: 질문 1개
+         - 중간 내용: 질문 3개
+         - 긴 내용: 질문 5개
+         - 매우 긴 내용: 질문 10개
+      3. 각 질문은 다음 요소를 포함합니다:
+         - `question_id`: 질문 ID
+         - `content`: 질문 내용
+         - `options`: 보기 4개 (`option_id`와 `content`로 구성)
+         - `correct`: 정답 번호 (1~4)
+
+      **JSON 형식**:
+      {
+        "quizzes": [
+          {
+            "day": 1,
+            "title": "string",  // 퀴즈 제목
+            "questionCnt": 1,  // 퀴즈에 포함된 질문 수
+            "questions": [
+              {
+                "question_id": 1,
+                "content": "string",  // 질문 내용
+                "options": [
+                  { "option_id": 1, "content": "string" },  // 보기 1
+                  { "option_id": 2, "content": "string" },  // 보기 2
+                  { "option_id": 3, "content": "string" },  // 보기 3
+                  { "option_id": 4, "content": "string" }   // 보기 4
+                ],
+                "correct": 1  // 정답 보기 번호
+              }
+            ]
+          }
+        ]
+      }
+
+      **예시**:
+      사진 내용:
+      "조선 시대의 문화유산에 대해 배웠습니다. 경복궁과 창덕궁은 조선을 대표하는 궁궐이며, 세종대왕의 한글 창제는 조선의 중요한 업적입니다."
+
+      응답 예시:
+      {
+        "quizzes": [
+          {
+            "day": 1,
+            "title": "조선 시대의 문화유산",
+            "questionCnt": 2,
+            "questions": [
+              {
+                "question_id": 1,
+                "content": "경복궁과 창덕궁은 어떤 시대의 건축물인가요?",
+                "options": [
+                  { "option_id": 1, "content": "조선 시대" },
+                  { "option_id": 2, "content": "고려 시대" },
+                  { "option_id": 3, "content": "삼국 시대" },
+                  { "option_id": 4, "content": "일제 강점기" }
+                ],
+                "correct": 1
+              },
+              {
+                "question_id": 2,
+                "content": "세종대왕의 업적은 무엇인가요?",
+                "options": [
+                  { "option_id": 1, "content": "훈민정음 창제" },
+                  { "option_id": 2, "content": "경복궁 건립" },
+                  { "option_id": 3, "content": "대마도 정벌" },
+                  { "option_id": 4, "content": "병자호란 승리" }
+                ],
+                "correct": 1
+              }
+            ]
+          }
+        ]
+      }
