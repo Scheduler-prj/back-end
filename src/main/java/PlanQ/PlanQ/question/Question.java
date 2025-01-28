@@ -1,42 +1,60 @@
 package PlanQ.PlanQ.question;
 
-import PlanQ.PlanQ.option.Option;
 import PlanQ.PlanQ.quiz.Quiz;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
+import lombok.Setter;
 
 @Data
 @Entity
+@Setter
+@Builder
 @Table(name = "question")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Question {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "question_id")
+    @Column(name = "question_id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "quiz_id")
-    private Quiz quiz;
+    @Column(nullable = false)
+    private Integer questionNum; // num -> question_num
 
-    private String title;
+    @Column(nullable = false)
+    private String content; // title -> content
 
-    @Enumerated(EnumType.STRING)
-    private QuestionCategory questionCategory;
-
+    @Column(nullable = false)
     private String correct;
 
-    @Column(name = "is_correct")
-    private boolean isCorrect;
+    private Integer selectOption; // (long -> Integer(null 허용을 위해)
 
+    @Builder.Default
     @Column(nullable = false)
-    private Long selectOption;
+    private boolean isCorrect = false;
 
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
     @Column(nullable = false)
-    private int num;
+    private QuestionType questionType = QuestionType.MCQ;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "quiz_id", nullable = false)
+    private Quiz quiz;
 }

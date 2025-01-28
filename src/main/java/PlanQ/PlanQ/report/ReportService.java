@@ -34,14 +34,14 @@ public class ReportService {
     }
 
     @Transactional
-    public Long createReport(Long todoId, MultipartFile file, RequestReportDto requestReportDto){
+    public Report createReport(Long todoId, MultipartFile file, RequestReportDto requestReportDto){
         Todo todo = todoService.findById(todoId);
         String s3Url = s3Service.upload(file);
         System.out.println("S3 URL: " + s3Url);
         Report report = requestReportDto.toEntity(s3Url, todo);
         reportRepository.save(report);
         todoService.updateIsClear(todo);
-        return report.getId();
+        return report;
     }
 
     public List<ResponsePdfDto> getPdfOfYearMonth(Long year, Long month){
