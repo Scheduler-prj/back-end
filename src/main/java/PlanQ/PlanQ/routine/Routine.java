@@ -2,6 +2,8 @@ package PlanQ.PlanQ.routine;
 
 import PlanQ.PlanQ.Member.Member;
 import PlanQ.PlanQ.embeddad.Calender;
+import PlanQ.PlanQ.notification.Notification;
+import PlanQ.PlanQ.notification.Type;
 import PlanQ.PlanQ.routine.dto.request.RequestRoutineDto;
 import PlanQ.PlanQ.routine.dto.response.ResponseRoutineDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -68,4 +70,12 @@ public class Routine {
         this.calender.reset();
     }
 
+    public Notification toNotification(){
+        return Notification.builder()
+                .type(Type.ROUTINE)
+                .plan(null)
+                .todo(null)
+                .routine(this)
+                .build();
+    }
 }

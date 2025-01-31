@@ -9,4 +9,9 @@ import java.util.List;
 public interface RoutineRepository extends JpaRepository<Routine, Long> {
     List<Routine> findAllByMember(Member member);
 
+    @Query("select r from Routine r " +
+            "join r.dotws d " +
+            "where d = :dotw " +
+            "and r.calender.isClear = false")
+    List<Routine> findAllByCalenderFalse(Dotw dotw);
 }

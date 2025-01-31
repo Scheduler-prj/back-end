@@ -4,10 +4,7 @@ import PlanQ.PlanQ.plan.Plan;
 import PlanQ.PlanQ.routine.Routine;
 import PlanQ.PlanQ.todo.Todo;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Table(name = "notification")
@@ -31,17 +28,48 @@ public class Notification {
     @Column(name = "is_read")
     private boolean isRead;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "planId", nullable = true)
     private Plan plan;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "routineId", nullable = true)
     private Routine routine;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "todoId", nullable = true)
     private Todo todo;
 
+    @Builder
+    public Notification(Type type, Plan plan, Routine routine, Todo todo){
+        this.type = type;
 
+        if(type == Type.PLAN && plan != null){
+            this.plan = plan;
+            this.status = plan.getCalender().getTitle() + "이 아직 완료 되지 않았습니다.";
+        }
+        if(type == Type.ROUTINE && routine != null){
+            this.routine = routine;
+            this.status = routine.getCalender().getTitle() + "이 아직 완료 되지 않았습니다.";
+        }
+        if(type == Type.TODO && todo != null){
+            this.todo = todo;
+            this.status = todo.getCalender().getTitle() + "이 아직 완료 되지 않았습니다.";
+        }
+
+        this.isRead = false;
+    }
+
+    public void readIt(){
+        this.isRead = true;
+    }
+
+    public ResponseNotificationDto toResponse(){
+        return new ResponseNotificationDto(
+                this.id,
+                this.status,
+                this.type,
+                this.isRead
+        );
+    }
 }

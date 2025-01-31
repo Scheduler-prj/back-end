@@ -3,6 +3,8 @@ package PlanQ.PlanQ.todo;
 import PlanQ.PlanQ.Member.Member;
 import PlanQ.PlanQ.embeddad.Calender;
 import PlanQ.PlanQ.global.Color;
+import PlanQ.PlanQ.notification.Notification;
+import PlanQ.PlanQ.notification.Type;
 import PlanQ.PlanQ.report.Report;
 import PlanQ.PlanQ.todo.dto.request.RequestTodoDto;
 import PlanQ.PlanQ.todo.dto.response.ResponseTodoDto;
@@ -70,5 +72,14 @@ public class Todo {
 
     public void updateIsClear(){
         this.calender.changeClear();
+    }
+
+    public Notification toNotification(){
+        return Notification.builder()
+                .type(Type.TODO)
+                .plan(null)
+                .todo(this)
+                .routine(null)
+                .build();
     }
 }

@@ -2,6 +2,7 @@ package PlanQ.PlanQ.routine;
 
 import PlanQ.PlanQ.Member.Member;
 import PlanQ.PlanQ.Member.MemberService;
+import PlanQ.PlanQ.notification.Notification;
 import PlanQ.PlanQ.routine.dto.request.RequestRoutineDto;
 import PlanQ.PlanQ.routine.dto.response.ResponseRoutineDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -78,5 +80,13 @@ public class RoutineService {
     @Transactional
     public void resetRoutine(){
         routineRepository.findAll().forEach(Routine::reset);
+    }
+
+    public List<Notification> bringUnclearData()
+    {
+        Dotw dotw = Dotw.fromString(LocalDateTime.now().getDayOfWeek().name());
+        return routineRepository.findAllByCalenderFalse(dotw).stream()
+                .map(Routine :: toNotification)
+                .toList();
     }
 }

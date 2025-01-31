@@ -2,16 +2,16 @@ package PlanQ.PlanQ.plan;
 
 import PlanQ.PlanQ.Member.Member;
 import PlanQ.PlanQ.Member.MemberService;
+import PlanQ.PlanQ.notification.Notification;
 import PlanQ.PlanQ.plan.dto.request.RequestPlanDto;
 import PlanQ.PlanQ.plan.dto.response.ResponsePlanDto;
-import PlanQ.PlanQ.report.dto.request.RequestReportDto;
-import PlanQ.PlanQ.security.Dto.SecurityUserDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -27,7 +27,7 @@ public class PlanService {
     }
     public List<ResponsePlanDto> viewAllByMemberAndYearMonth(Long year, Long month){
         Member member = memberService.getMember();
-        return planRepository.findAllByMemberAndYearMonth(member, year, month).stream()
+        return planRepository.findAllByMemberAndCalender_AlarmTrueAndCalender_ClearFalseAndToday(member, LocalDateTime.now()).stream()
                 .map(Plan :: toResponsePlanDto)
                 .toList();
     }
@@ -76,4 +76,9 @@ public class PlanService {
         return true;
     }
 
+    public List<Notification> bringUnclearData(){
+        return planRepository.findAllByCalenderIsFalse(LocalDateTime.now()).stream()
+                .map(Plan :: toNotification)
+                .toList();
+    }
 }

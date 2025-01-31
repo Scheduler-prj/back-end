@@ -3,6 +3,7 @@ package PlanQ.PlanQ.todo;
 import PlanQ.PlanQ.Member.Member;
 import PlanQ.PlanQ.Member.MemberService;
 import PlanQ.PlanQ.global.Color;
+import PlanQ.PlanQ.notification.Notification;
 import PlanQ.PlanQ.security.oauth2.CustomOAuth2UserService;
 import PlanQ.PlanQ.todo.dto.request.RequestTodoDto;
 import PlanQ.PlanQ.todo.dto.response.ResponseTodoDto;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -59,5 +61,12 @@ public class TodoService {
     @Transactional
     public void updateIsClear(Todo todo){
         todo.updateIsClear();
+    }
+
+    public List<Notification> bringUnclearData(){
+        return todoRepository.findAllByCalender_IsClearFalseAndCalender_AlarmTrueAndTodoAtBetween(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
+        , LocalDateTime.now().plusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0).minusNanos(1)).stream()
+                .map(Todo :: toNotification)
+                .toList();
     }
 }
