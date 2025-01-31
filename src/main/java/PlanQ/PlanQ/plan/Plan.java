@@ -3,6 +3,8 @@ package PlanQ.PlanQ.plan;
 import PlanQ.PlanQ.Member.Member;
 import PlanQ.PlanQ.embeddad.Calender;
 import PlanQ.PlanQ.global.Color;
+import PlanQ.PlanQ.notification.Notification;
+import PlanQ.PlanQ.notification.Type;
 import PlanQ.PlanQ.plan.dto.request.RequestPlanDto;
 import PlanQ.PlanQ.plan.dto.response.ResponsePlanDto;
 import jakarta.persistence.*;
@@ -69,5 +71,14 @@ public class Plan {
                 this.calender.getComment(),
                 this.calender.isClear()
         );
+    }
+
+    public Notification toNotification(){
+        return Notification.builder()
+                .type(Type.PLAN)
+                .plan(this)
+                .todo(null)
+                .routine(null)
+                .build();
     }
 }
