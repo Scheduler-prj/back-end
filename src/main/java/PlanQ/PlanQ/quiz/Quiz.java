@@ -1,6 +1,8 @@
 package PlanQ.PlanQ.quiz;
 
 import PlanQ.PlanQ.global.Color;
+import PlanQ.PlanQ.question.dto.response.ResponseQuestionDto;
+import PlanQ.PlanQ.quiz.dto.response.ResponseQuizDto;
 import PlanQ.PlanQ.report.Report;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +17,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -64,4 +68,29 @@ public class Quiz {
     @ManyToOne
     @JoinColumn(name = "report_id", nullable = false)
     private Report report;
+
+    public ResponseQuizDto toResponseQuizDto(List<ResponseQuestionDto> questionList){
+        return new ResponseQuizDto(
+                this.id,
+                this.title,
+                this.reviewDate,
+                this.solveTime,
+                this.category,
+                this.correctCnt,
+                this.questionCnt,
+                this.isSolved,
+                this.favorite,
+                this.color != null ? this.color.toString() : "RED",
+                questionList
+        );
+    }
+
+    public void changeCorrectNum(Integer correctCnt){
+        this.correctCnt = correctCnt;
+    }
+
+    public void clearSolved(){
+        this.isSolved = true;
+        this.solveTime = LocalTime.now();
+    }
 }
