@@ -1,5 +1,6 @@
 package PlanQ.PlanQ.option;
 
+import PlanQ.PlanQ.option.dto.response.ResponseOptionDto;
 import PlanQ.PlanQ.question.Question;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,10 +30,19 @@ public class Option {
     @Column(name = "option_id", nullable = false)
     private Long Id;
 
+    private Integer optionNum;
+
     @Column(nullable = false)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
+
+    public ResponseOptionDto toResponseOptionDto(){
+        return new ResponseOptionDto(
+                this.Id,
+                this.content
+        );
+    }
 }

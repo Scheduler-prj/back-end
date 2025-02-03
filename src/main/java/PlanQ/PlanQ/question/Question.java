@@ -1,5 +1,7 @@
 package PlanQ.PlanQ.question;
 
+import PlanQ.PlanQ.option.dto.response.ResponseOptionDto;
+import PlanQ.PlanQ.question.dto.response.ResponseQuestionDto;
 import PlanQ.PlanQ.quiz.Quiz;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -20,6 +22,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Data
 @Entity
 @Setter
@@ -35,13 +39,13 @@ public class Question {
     private Long id;
 
     @Column(nullable = false)
-    private Integer questionNum; // num -> question_num
+    private Integer questionNum = 0; // num -> question_num
 
     @Column(nullable = false)
     private String content; // title -> content
 
     @Column(nullable = false)
-    private String correct;
+    private Integer correct; // String -> Integer 변경
 
     private Integer selectOption; // (long -> Integer(null 허용을 위해)
 
@@ -57,4 +61,23 @@ public class Question {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "quiz_id", nullable = false)
     private Quiz quiz;
+
+    public ResponseQuestionDto toResponseQuestionDto(List<ResponseOptionDto> options){
+        return new ResponseQuestionDto(
+                this.id,
+                this.questionNum,
+                this.content,
+                this.correct,
+                this.selectOption,
+                this.isCorrect,
+                this.questionType.toString(),
+                options
+        );
+    }
+
+    public boolean checkCorrect(Integer selectOption){
+        this.selectOption = selectOption;
+        this.isCorrect = this.selectOption.equals(correct);
+        return this.isCorrect;
+    }
 }

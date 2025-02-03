@@ -1,12 +1,19 @@
 package PlanQ.PlanQ.quiz;
 
+import PlanQ.PlanQ.Member.Member;
+import PlanQ.PlanQ.Member.MemberService;
 import PlanQ.PlanQ.option.Option;
 import PlanQ.PlanQ.option.OptionRepository;
 import PlanQ.PlanQ.question.Question;
 import PlanQ.PlanQ.question.QuestionRepository;
+import PlanQ.PlanQ.question.QuestionService;
+import PlanQ.PlanQ.question.dto.response.ResponseQuestionDto;
+import PlanQ.PlanQ.quiz.dto.request.RequestSolveDto;
+import PlanQ.PlanQ.quiz.dto.response.ResponseQuizDto;
 import PlanQ.PlanQ.report.Report;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -41,9 +48,16 @@ public class QuizService {
     private final QuestionRepository questionRepository;
     private final OptionRepository optionRepository;
     private final ObjectMapper objectMapper;
+    private final MemberService memberService;
+    private final QuestionService questionService;
 
     @Value("${quiz.generation.prompt}")
     private String prompt;
+
+    public Quiz findById(Long id){
+        return quizRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Quiz id"));
+    }
 
     @Transactional
     public void generateQuizFromPdf(MultipartFile file, Report report) throws IOException {
@@ -136,7 +150,7 @@ public class QuizService {
 
                 for (JsonNode questionNode : questionsNode) {
                     String content = questionNode.get("content").asText();
-                    String correctOption = String.valueOf(questionNode.get("correct").asInt());
+                    Integer correctOption = questionNode.get("correct").asInt();
                     int questionNum = questionNode.get("question_id").asInt();
                     JsonNode optionsNode = questionNode.get("options");
 
@@ -170,5 +184,30 @@ public class QuizService {
         }
     }
 
+    public ResponseQuizDto findQuizData(Long quizId){
+        Member member = memberService.getMember();
+        Quiz quiz = findById(quizId);
+        if(!member.equals(quiz.getReport().getTodo().getMember())){
+            log.error("문제 조회 불가능한 유저");
+            return null;
+        }
+
+        List<ResponseQuestionDto> questionDtoList = questionService.findByQuestionOfQuiz(quiz);
+
+        return quiz.toResponseQuizDto(questionDtoList);
+    }
+
+    @Transactional
+    public Boolean solvedQuiz(Long quizId, RequestSolveDto requestSolveDto){
+        Member member = memberService.getMember();
+        Quiz quiz = findById(quizId);
+        if(!member.equals(quiz.getReport().getTodo().getMember())){
+            log.error("문제 풀이 불가 유저");
+            return null;
+        }
+        quiz.changeCorrectNum(questionService.solveQuestion(requestSolveDto.getRequestQuestionDtoList()));
+        quiz.clearSolved();
+        return true;
+    }
 
 }
