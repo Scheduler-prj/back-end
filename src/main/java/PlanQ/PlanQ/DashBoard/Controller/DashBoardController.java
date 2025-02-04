@@ -40,7 +40,8 @@ public class DashBoardController {
         return ResponseEntity.ok(dashBoardService.getIncorrectQuiz(date));
     }
 
-    // 4. 복습 날짜 조회
+    // 4. 복습 날짜 조회(매일 00시에 오늘 기준으로 며칠 연속 복습했는지 (성과 제출, 퀴즈
+
 
     // 5. 제출된 성과 조회
     @GetMapping("/submittedReport/{date}")
