@@ -33,8 +33,8 @@ public class Todo {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "todo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Report> reports = new ArrayList<>();
+    @OneToOne(mappedBy = "todo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Report report;
 
     private LocalDateTime todoAt;
 

@@ -40,8 +40,11 @@ public class DashBoardController {
         return ResponseEntity.ok(dashBoardService.getIncorrectQuiz(date));
     }
 
-    // 4. 복습 날짜 조회(매일 00시에 오늘 기준으로 며칠 연속 복습했는지 (성과 제출, 퀴즈
-
+    // 4. 복습 날짜 조회(매일 00시에 오늘 기준으로 며칠 연속 복습했는지 (성과 제출, 퀴즈 풀이 날짜)
+    @GetMapping("/consecutiveDays/{date}")
+    public ResponseEntity<Integer> getConsecutiveDays(@PathVariable String date){
+        return ResponseEntity.ok().body(1);
+    }
 
     // 5. 제출된 성과 조회
     @GetMapping("/submittedReport/{date}")

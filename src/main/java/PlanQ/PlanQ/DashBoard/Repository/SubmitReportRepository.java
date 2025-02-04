@@ -14,6 +14,7 @@ public interface SubmitReportRepository extends JpaRepository<Report,Long> {
     @Query("select new PlanQ.PlanQ.DashBoard.DTO.SubmitReportDto(t.calender.title, r.updateDate, r.comment, r.color) " +
             "from Report r " +
             "join Todo t ON r.todo.id = t.id " +
-            "where r.updateDate between :startDate and :endDate")
-    List<SubmitReportDto> getWeeklySubmittedReport(String startDate, String endDate);
+            "join Member m on t.member.id = m.id " +
+            "where r.updateDate between :startDate and :endDate and m.id = :memberId")
+    List<SubmitReportDto> getWeeklySubmittedReport(String startDate, String endDate, Long memberId);
 }

@@ -12,6 +12,9 @@ import java.util.List;
 public interface DailyQuizRepository extends JpaRepository<Quiz,Long> {
     @Query("select new PlanQ.PlanQ.DashBoard.DTO.DailyQuizDto(q.category,q.title,q.questionCnt,q.isSolved,q.color) " +
             "from Quiz q " +
-            "where q.reviewDate = :date")
-    List<DailyQuizDto> findDailyQuizDtosByDate(String date);
+            "join Report r on q.report.id = r.id " +
+            "join Todo t on r.id = t.report.id " +
+            "join Member m on t.member.id = m.id " +
+            "where q.reviewDate = :date and m.id = :memberId")
+    List<DailyQuizDto> findDailyQuizDtosByDate(String date, Long memberId);
 }

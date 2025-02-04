@@ -31,7 +31,7 @@ public class Report {
     @Column(name = "report_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "todo_id",nullable = false)
     private Todo todo;
 
