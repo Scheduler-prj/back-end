@@ -19,6 +19,8 @@ public class CorsConfig {
         allowedOriginPatterns.add("http://localhost:3000");
         allowedOriginPatterns.add("http://127.0.0.1:3000");
         allowedOriginPatterns.add("http://localhost:8080");
+        allowedOriginPatterns.add("http://planq.choizeus.com:3000");
+        allowedOriginPatterns.add("http://planq.choizeus.com:9001");
 
         configuration.setAllowedOrigins(allowedOriginPatterns);
 

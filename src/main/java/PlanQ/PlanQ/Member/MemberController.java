@@ -20,30 +20,19 @@ public class MemberController {
 
     private final MemberService memberService;
 
-//    // 회원가입
-//    @GetMapping("/register")
-//    public ResponseEntity<?> register(
-//            @RequestParam("email") String email,
-//            @RequestParam("provider") String provider,
-//            @RequestParam("nickname") String nickname,
-//            @RequestParam("profile_image_url") String profile_image_url) {
-//
-//        memberService.register(email, provider, nickname, profile_image_url);
-//        return ResponseEntity.ok().body("ok");
-//    }
-
     //로그인 성공
     @GetMapping("/loginSuccess")
     public ResponseEntity<?> loginSuccess() {
-        return ResponseEntity.ok().body("ok");
+
+         return ResponseEntity.status(302) // HTTP 302 상태코드로 리다이렉트
+                         .header("Location", "http://planq.choizeus.com:3000/loginSuccess") // React의 loginSuccess 경로
+                         .build();
+
     }
 
-    //test
-    @GetMapping("/test")
-    public ResponseEntity<?> test() {
-
-
-
+    // 엑세스 토큰을 통해 멤버 정보 가져오는 API
+    @GetMapping("/findOne")
+    public ResponseEntity<?> findOne() {
         return ResponseEntity.ok().body(memberService.getMember());
     }
 
