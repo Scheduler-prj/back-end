@@ -206,7 +206,7 @@ public class QuizService {
             return null;
         }
         quiz.changeCorrectNum(questionService.solveQuestion(requestSolveDto.getRequestQuestionDtoList()));
-        quiz.clearSolved();
+        quiz.clearSolved(requestSolveDto.getSolveTime());
         return true;
     }
 

@@ -19,6 +19,8 @@ public class ResponseQuizDto {
 
     private LocalDateTime reviewDate;
 
+    private LocalDateTime solveDate;
+
     private LocalTime solveTime;
 
     private String category;

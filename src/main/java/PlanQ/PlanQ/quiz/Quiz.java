@@ -45,6 +45,8 @@ public class Quiz {
     @Column(nullable = false)
     private LocalDateTime reviewDate; // date -> reviewDate
 
+    private LocalDateTime solveDate; // 문제를 푼 날짜
+
     private LocalTime solveTime; // time -> solveTime
 
     private String category; // 디자인 회의 필요(직접 지정 or to do 제목)
@@ -74,6 +76,7 @@ public class Quiz {
                 this.id,
                 this.title,
                 this.reviewDate,
+                this.solveDate,
                 this.solveTime,
                 this.category,
                 this.correctCnt,
@@ -89,8 +92,9 @@ public class Quiz {
         this.correctCnt = correctCnt;
     }
 
-    public void clearSolved(){
+    public void clearSolved(LocalTime solveTime){
         this.isSolved = true;
-        this.solveTime = LocalTime.now();
+        this.solveTime = solveTime;
+        this.solveDate = LocalDateTime.now();
     }
 }
