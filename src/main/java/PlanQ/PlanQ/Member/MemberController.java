@@ -24,9 +24,7 @@ public class MemberController {
     @GetMapping("/loginSuccess")
     public ResponseEntity<?> loginSuccess() {
 
-         return ResponseEntity.status(302) // HTTP 302 상태코드로 리다이렉트
-                         .header("Location", "http://planq.choizeus.com:3000/loginSuccess") // React의 loginSuccess 경로
-                         .build();
+        return ResponseEntity.ok().body("ok");
 
     }
 
