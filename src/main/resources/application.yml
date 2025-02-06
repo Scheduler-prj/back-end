@@ -1,18 +1,14 @@
-
-
 spring:
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate.hibernate.default_batch_fetch_size: 100
+  config:
+    import: optional:application-keys.yml
 
 logging:
   level:
     org.hibernate.sql: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
-
-
-server:
-  port: 9001
