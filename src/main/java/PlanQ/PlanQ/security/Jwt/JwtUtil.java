@@ -9,10 +9,13 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 
@@ -24,10 +27,12 @@ public class JwtUtil {
     private final RefreshTokenService tokenService;
     private String secretKey;
 
+
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(jwtProperties.getSecret().getBytes());
     }
+
 
     private SecretKey getSigningKey(){
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -69,8 +74,8 @@ public class JwtUtil {
     }
 
     public String generateAccessToken(String email, String role) {
-        //long tokenPeriod = 1000L * 60L * 30L; // 30분
-        long tokenPeriod = 1000L * 2L; // 2초
+        long tokenPeriod = 1000L * 60L * 30L; // 30분
+        //long tokenPeriod = 1000L * 2L; // 2초
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("role", role);
 

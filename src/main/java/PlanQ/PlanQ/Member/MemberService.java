@@ -1,9 +1,13 @@
 package PlanQ.PlanQ.Member;
 
+import PlanQ.PlanQ.security.Dto.SecurityUserDto;
+import PlanQ.PlanQ.security.Jwt.JwtUtil;
 import PlanQ.PlanQ.security.oauth2.CustomOAuth2UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,7 +18,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
+    private final JwtUtil  jwtUtil;
 
     public void register(String email, String provider, String nickname, String profile_image_url) {
 
@@ -23,6 +27,18 @@ public class MemberService {
     }
 
     public Optional<Member> findByEmail(String email) {
+
         return memberRepository.findByEmail(email);
+    }
+
+    public Member findByAccessToken(String accessToken) {
+        String email = jwtUtil.getUid(accessToken);
+        return memberRepository.findByEmail(email).get();
+    }
+
+    public Member getMember() {
+        // 사용자 정보 받아오기
+        SecurityUserDto securityUserDto = (SecurityUserDto)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return memberRepository.findByEmail(securityUserDto.getEmail()).get();
     }
 }

@@ -1,45 +1,100 @@
 package PlanQ.PlanQ.quiz;
 
-import PlanQ.PlanQ.question.Question;
+import PlanQ.PlanQ.global.Color;
+import PlanQ.PlanQ.question.dto.response.ResponseQuestionDto;
+import PlanQ.PlanQ.quiz.dto.response.ResponseQuizDto;
 import PlanQ.PlanQ.report.Report;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.List;
+import org.hibernate.mapping.ToOne;
 
 @Data
 @Entity
+@Builder
 @Table(name = "quiz")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Quiz {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "quiz_id")
+    @Column(name = "quiz_id", nullable = false)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "report_id")
-    private Report report;
-
+    @Column(nullable = false)
     private String title;
 
-    private String category;
+    @Column(nullable = false)
+    private LocalDateTime reviewDate; // date -> reviewDate
 
-    private LocalDateTime date;
+    private LocalDateTime solveDate; // 문제를 푼 날짜
 
-    @Column(name = "is_solved")
-    private boolean isSolved;
+    private LocalTime solveTime; // time -> solveTime
 
-    private LocalDateTime time;
+    private String category; // 디자인 회의 필요(직접 지정 or to do 제목)
 
-    @Column(name = "correct_num")
-    private Long correctNum;
+    private Integer correctCnt; // correctNum -> correctCnt
 
-    @Column(name = "question_num")
-    private Long questionNum;
+    @Column(nullable = false)
+    private Integer questionCnt; // questionNum -> questionCnt
 
-    private boolean favorite;
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean isSolved = false;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean favorite = false;
+
+    @Enumerated(EnumType.STRING)
+    private Color color;
+
+    @ManyToOne
+    @JoinColumn(name = "report_id", nullable = false)
+    private Report report;
+
+    public ResponseQuizDto toResponseQuizDto(List<ResponseQuestionDto> questionList){
+        return new ResponseQuizDto(
+                this.id,
+                this.title,
+                this.reviewDate,
+                this.solveDate,
+                this.solveTime,
+                this.category,
+                this.correctCnt,
+                this.questionCnt,
+                this.isSolved,
+                this.favorite,
+                this.color != null ? this.color.toString() : "RED",
+                questionList
+        );
+    }
+
+    public void changeCorrectNum(Integer correctCnt){
+        this.correctCnt = correctCnt;
+    }
+
+    public void clearSolved(LocalTime solveTime){
+        this.isSolved = true;
+        this.solveTime = solveTime;
+        this.solveDate = LocalDateTime.now();
+    }
 }

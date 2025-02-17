@@ -20,6 +20,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity(debug = false)
@@ -35,14 +38,25 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .httpBasic(AbstractHttpConfigurer::disable) //http 기본 인증 비활성화
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(request -> {  // 조금 더 명확한 CORS 설정 추가
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.setAllowedOrigins(List.of(
+                            "http://localhost:3000",
+                            "http://planq.choizeus.com:9001"  // ✅ CORS 허용 도메인 추가
+                    ));
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    config.setAllowedHeaders(List.of("*"));
+                    config.setAllowCredentials(true);
+                    config.setExposedHeaders(List.of("Authorization"));
+                    return config;
+                }))
                 .csrf(AbstractHttpConfigurer::disable) //csrf 보호 기능 비활성화
                 .sessionManagement(c ->
                         c.sessionCreationPolicy((SessionCreationPolicy.STATELESS))) // 세션관리 정책을 STATELESS(세션이 있으면 쓰지도 않고, 없으면 만들지도 않는다)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
                         request
-                                .requestMatchers( "/**").permitAll()                           // 토큰 발급을 위한 경로는 모두 허용
+                                .requestMatchers("/**").permitAll()                           // 토큰 발급을 위한 경로는 모두 허용
                                 .anyRequest().authenticated() // 그외 모든 요청은 인증 필요
                 )
 
@@ -50,12 +64,11 @@ public class SecurityConfig {
 //                        .loginPage("/login")
 //                        .permitAll()
 //                )
-                .oauth2Login(oauth ->
-                        oauth.userInfoEndpoint(c -> c.userService(customOauth2UserService)) // OAuth2 로그인시 사용자 정보를 가져오는 앤드포인트와 사용자 서비스를 설정
-                        .failureHandler(oAuth2LoginFailureHandler)  // 로그인 실패시 처리할 핸들러 설정
+                .oauth2Login(oauth -> oauth
+                        .userInfoEndpoint(c -> c.userService(customOauth2UserService)) // OAuth2 로그인시 사용자 정보를 가져오는 앤드포인트와 사용자 서비스를 설정
                         .successHandler(oAuth2LoginSuccessHandler) // 로그인 성공시 처리할 핸들러 설정
+                        .failureHandler(oAuth2LoginFailureHandler)  // 로그인 실패시 처리할 핸들러 설정
                 );
-
 
 
         // JWT 인증필터를 UsernamePasswordAuthenticationFilter 앞에 추가한다.
@@ -64,5 +77,4 @@ public class SecurityConfig {
                 .addFilterBefore(jwtExceptionFilter, JwtAuthFilter.class)
                 .build();
     }
-
 }

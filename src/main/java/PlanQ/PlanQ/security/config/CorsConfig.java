@@ -2,6 +2,7 @@ package PlanQ.PlanQ.security.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -11,6 +12,7 @@ import java.util.Collections;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CorsConfig {
+    @Bean  // -> Bean 주입
     public static CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
@@ -18,6 +20,10 @@ public class CorsConfig {
         ArrayList<String> allowedOriginPatterns = new ArrayList<>();
         allowedOriginPatterns.add("http://localhost:3000");
         allowedOriginPatterns.add("http://127.0.0.1:3000");
+        allowedOriginPatterns.add("http://localhost:8080");
+        allowedOriginPatterns.add("http://planq.choizeus.com:3000");
+        allowedOriginPatterns.add("http://planq.choizeus.com:9001");
+
         configuration.setAllowedOrigins(allowedOriginPatterns);
 
         //허용하는 HTTP METHOD 지정

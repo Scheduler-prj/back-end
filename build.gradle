@@ -21,6 +21,11 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+}
+
+ext {
+	set('springAiVersion', "1.0.0-M4")
 }
 
 dependencies {
@@ -28,7 +33,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	implementation "org.springframework.ai:spring-ai-openai-spring-boot-starter:${springAiVersion}"
+	implementation "org.springframework.ai:spring-ai-core:${springAiVersion}"
+	implementation 'org.apache.pdfbox:pdfbox:2.0.29'
+	implementation 'org.apache.pdfbox:pdfbox-tools:2.0.29'
+
+
 	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -37,8 +51,15 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2', 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-}
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+}
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+	}
+}
 tasks.named('test') {
 	useJUnitPlatform()
 }
