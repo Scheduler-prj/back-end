@@ -35,6 +35,7 @@ public class OAuth2Attribute {
 
     // 구글로그인 메서드, 사용자 정보가 따로 Wrapping 되어있지 않아 get() 메서드로 접근 가능
     private static OAuth2Attribute ofGoogle(String provider, String attributeKey, Map<String, Object> attributes) {
+
         return OAuth2Attribute.builder()
                 .email((String) attributes.get("email"))
                 .nickname((String) attributes.get("name"))

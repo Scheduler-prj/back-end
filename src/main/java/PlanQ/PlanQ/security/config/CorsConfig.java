@@ -2,6 +2,7 @@ package PlanQ.PlanQ.security.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -11,6 +12,7 @@ import java.util.Collections;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CorsConfig {
+    @Bean  // -> Bean 주입
     public static CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 

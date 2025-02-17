@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -16,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 @Slf4j
 @Component
@@ -59,18 +62,34 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
             log.info("jwtToken = {}", token.getAccessToken());
             //log.info("jwtToken = {}", token.getRefreshToken());
 
-            // accessToken을 쿼리스트링에 담는 url을 만들어준다.
-            //String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/loginSuccess")
-            String targetUrl = UriComponentsBuilder.fromUriString("http://planq.choizeus.com:9001/loginSuccess")
-                    .build()
-                    .encode(StandardCharsets.UTF_8)
-                    .toUriString();
+//            // accessToken을 쿼리스트링에 담는 url을 만들어준다.
+//            //String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/loginSuccess")
+//            String targetUrl = UriComponentsBuilder.fromUriString("http://planq.choizeus.com:9001/loginSuccess")
+//                    .build()
+//                    .encode(StandardCharsets.UTF_8)
+//                    .toUriString();
+//
+//            // response 헤더에 토큰 추가
+//            response.setHeader("Authorization", "Bearer " + token.getAccessToken());
+//
+//            log.info("redirect 준비");
+//            // 로그인 확인 페이지로 리다이렉트
+//            getRedirectStrategy().sendRedirect(request,response,targetUrl);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-            // response 헤더에 토큰 추가
-            response.setHeader("Authorization", "Bearer " + token.getAccessToken());
+        // JWT를 HttpOnly 쿠키로 저장
+        ResponseCookie jwtCookie = ResponseCookie.from("accessToken", token.getAccessToken())
+                .httpOnly(true) // JavaScript에서 접근 불가능
+                .secure(false) // HTTPS 환경에서는 true
+                .path("/") // 모든 요청에서 쿠키 포함
+                .maxAge(Duration.ofHours(2)) // 2시간 유지
+                .build();
 
-            log.info("redirect 준비");
-            // 로그인 확인 페이지로 리다이렉트
-            getRedirectStrategy().sendRedirect(request,response,targetUrl);
+        // 쿠키를 응답 헤더에 추가
+        response.setHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+
+        // 프론트엔드로 리다이렉트
+        response.sendRedirect("http://localhost:3000/calendar");
     }
 }

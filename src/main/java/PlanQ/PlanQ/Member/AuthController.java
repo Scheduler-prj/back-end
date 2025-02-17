@@ -8,16 +8,18 @@ import PlanQ.PlanQ.security.Redis.RefreshTokenRepository;
 import PlanQ.PlanQ.security.Redis.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
-  
+
     private final RefreshTokenRepository tokenRepository;
     private final RefreshTokenService tokenService;
     private final JwtUtil jwtUtil;
@@ -51,5 +53,14 @@ public class AuthController {
         return ResponseEntity.badRequest().body(TokenResponseStatus.addStatus(400,null));
     }
 
+		// check-auth API 추가
+    @GetMapping("/check-auth")
+    public ResponseEntity<?> checkAuth(@CookieValue(name = "accessToken", required = false) String accessToken) {
+        if (accessToken != null) {
+            return ResponseEntity.ok(Collections.singletonMap("accessToken", accessToken));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+    }
 
 }
