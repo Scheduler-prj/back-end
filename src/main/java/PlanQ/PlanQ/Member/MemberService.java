@@ -37,6 +37,9 @@ public class MemberService {
     }
 
     public Member getMember() {
+
+
+        
         // 사용자 정보 받아오기
         SecurityUserDto securityUserDto = (SecurityUserDto)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return memberRepository.findByEmail(securityUserDto.getEmail()).get();

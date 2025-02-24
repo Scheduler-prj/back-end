@@ -2,9 +2,11 @@ package PlanQ.PlanQ.DashBoard.Service;
 
 import PlanQ.PlanQ.DashBoard.DTO.DailyQuizDto;
 import PlanQ.PlanQ.DashBoard.DTO.IncorrectQuestionDto;
+import PlanQ.PlanQ.DashBoard.DTO.SubmitDateDto;
 import PlanQ.PlanQ.DashBoard.DTO.SubmitReportDto;
 import PlanQ.PlanQ.DashBoard.DTO.WeeklyQuizDto;
 import PlanQ.PlanQ.DashBoard.Repository.DailyQuizRepository;
+import PlanQ.PlanQ.DashBoard.Repository.DashboardRepository;
 import PlanQ.PlanQ.DashBoard.Repository.IncorrectQuizRepository;
 import PlanQ.PlanQ.DashBoard.Repository.SubmitReportRepository;
 import PlanQ.PlanQ.DashBoard.Repository.WeeklyQuizRepository;
@@ -16,7 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +34,7 @@ public class DashBoardService {
     private final IncorrectQuizRepository incorrectQuizRepository;
     private final SubmitReportRepository submitReportRepository;
     private final MemberService memberService;
+    private final DashboardRepository dashboardRepository;
 
     public List<DailyQuizDto> getDailyQuizzes(String date) {
         Long memberId = memberService.getMember().getId();
@@ -77,10 +83,31 @@ public class DashBoardService {
         return dates;
     }
 
-//    // 복습 날짜 조회(매일 00시에 오늘 기준으로 며칠 연속 복습했는지 (성과 제출, 퀴즈 풀이 날짜)
-//    public Integer getConsecutiveDays(String date){
-//        Long memberId = memberService.getMember().getId();
-//        LocalDate today = LocalDate.now();
-//    }
+    // 복습 날짜 조회(매일 00시에 오늘 기준으로 며칠 연속 복습했는지 (성과 제출, 퀴즈 풀이 날짜)
+    public int getConsecutiveDays(){
+        int consecutiveDays = 0;
+        Long memberId = memberService.getMember().getId();
+        LocalDate today = LocalDate.now();
+        List<SubmitDateDto> quizSolvedDateByMember = dashboardRepository.findQuizSolvedDateByMember(memberId);
+        List<SubmitDateDto> reportUpdateDateByMember = dashboardRepository.findReportUpdateDateByMember(memberId);
+
+        List<LocalDate> combinedDates = Stream.concat(
+        quizSolvedDateByMember.stream().map(dto -> dto.getUpdatedDate().toLocalDate()),
+        reportUpdateDateByMember.stream().map(dto -> dto.getUpdatedDate().toLocalDate())
+        )
+        .distinct() // 중복 제거
+        .sorted()   // 정렬 (선택 사항)
+        .collect(Collectors.toList());
+
+        for (int i = combinedDates.size() - 1; i >= 0; i--) {
+            if (combinedDates.get(i).equals(today.minusDays(consecutiveDays))) {
+                consecutiveDays++;
+            } else {
+                break;
+            }
+        }
+
+        return consecutiveDays;
+    }
 
 }
