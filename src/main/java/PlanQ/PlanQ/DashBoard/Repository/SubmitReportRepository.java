@@ -17,4 +17,6 @@ public interface SubmitReportRepository extends JpaRepository<Report,Long> {
             "join Member m on t.member.id = m.id " +
             "where r.updateDate between :startDate and :endDate and m.id = :memberId")
     List<SubmitReportDto> getWeeklySubmittedReport(String startDate, String endDate, Long memberId);
+
+
 }
